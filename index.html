@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Biz ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+    color:white;
+    overflow:hidden;
+}
+
+/* Açılış ekranı */
+.start-screen{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.love-btn{
+    padding:18px 35px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(45deg,#ff004c,#ff6a00);
+    color:white;
+    cursor:pointer;
+    box-shadow:0 0 25px rgba(255,0,100,0.7);
+    transition:0.4s;
+}
+
+.love-btn:active{
+    transform:scale(0.95);
+}
+
+/* Slider */
+.slider-container{
+    display:none;
+    width:100%;
+    height:100vh;
+    position:relative;
+}
+
+.slide{
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    transition:opacity 1s ease;
+    padding:20px;
+    text-align:center;
+}
+
+.slide img{
+    width:90%;
+    max-height:60vh;
+    object-fit:cover;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(255,0,120,0.7);
+}
+
+.caption{
+    margin-top:20px;
+    font-size:1.2rem;
+    line-height:1.6;
+}
+
+.active{
+    opacity:1;
+}
+
+/* Sayaç */
+.counter{
+    position:absolute;
+    bottom:20px;
+    width:100%;
+    text-align:center;
+    font-size:0.9rem;
+    color:#ff7ab6;
+}
+
+/* Floating hearts */
+.floating-heart{
+    position:absolute;
+    font-size:18px;
+    animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    from{transform:translateY(100vh);opacity:1;}
+    to{transform:translateY(-10vh);opacity:0;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="start-screen" id="startScreen">
+    <button class="love-btn" onclick="startLove()">
+        Seni ne kadar mı seviyorum? ❤️
+    </button>
+</div>
+
+<div class="slider-container" id="sliderScreen">
+
+    <div class="slide active">
+        <img src="1.jpeg">
+        <div class="caption">Seninle her an başka bir hikaye ❤️</div>
+    </div>
+
+    <div class="slide">
+        <img src="2.jpeg">
+        <div class="caption">Gülüşün dünyamı aydınlatıyor ✨</div>
+    </div>
+
+    <div class="slide">
+        <img src="3.jpeg">
+        <div class="caption">Yanımda olduğun sürece her şey tamam 💫</div>
+    </div>
+
+    <div class="slide">
+        <img src="7.jpeg">
+        <div class="caption">Sen benim en güzel tesadüfümsün 🌙</div>
+    </div>
+
+    <div class="slide">
+        <img src="8.jpeg">
+        <div class="caption">Ve bu sadece başlangıç… ❤️</div>
+    </div>
+
+    <div class="counter" id="loveCounter"></div>
+
+</div>
+
+<script>
+
+/* Başlat */
+function startLove(){
+    document.getElementById("startScreen").style.display="none";
+    document.getElementById("sliderScreen").style.display="block";
+}
+
+/* Slider */
+let current=0;
+const slides=document.querySelectorAll(".slide");
+
+function showSlide(index){
+    slides.forEach(s=>s.classList.remove("active"));
+    slides[index].classList.add("active");
+}
+
+function nextSlide(){
+    current=(current+1)%slides.length;
+    showSlide(current);
+}
+
+setInterval(nextSlide,4000);
+
+/* Swipe destek */
+let startX=0;
+document.addEventListener("touchstart",e=>{
+    startX=e.touches[0].clientX;
+});
+
+document.addEventListener("touchend",e=>{
+    let endX=e.changedTouches[0].clientX;
+    if(startX-endX>50){
+        nextSlide();
+    }
+    if(endX-startX>50){
+        current=(current-1+slides.length)%slides.length;
+        showSlide(current);
+    }
+});
+
+/* Sayaç - 22 Ağustos */
+function updateCounter(){
+    const startDate=new Date("2025-08-22T00:00:00"); // yılı değiştir
+    const now=new Date();
+    const diff=now-startDate;
+
+    const days=Math.floor(diff/(1000*60*60*24));
+    const hours=Math.floor((diff/(1000*60*60))%24);
+    const minutes=Math.floor((diff/(1000*60))%60);
+    const seconds=Math.floor((diff/1000)%60);
+
+    document.getElementById("loveCounter").innerHTML=
+        `22 Ağustos'tan beri ❤️<br>${days} gün ${hours} saat ${minutes} dakika ${seconds} saniye`;
+}
+
+setInterval(updateCounter,1000);
+updateCounter();
+
+/* Floating hearts */
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.classList.add("floating-heart");
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=(Math.random()*3+2)+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>{heart.remove();},5000);
+}
+setInterval(createHeart,500);
+
+</script>
+
+</body>
+</html>
